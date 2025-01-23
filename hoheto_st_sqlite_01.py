@@ -2,6 +2,9 @@ import streamlit as st
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
+
+db_path = 'example.db'
 
 # Create the database engine
 engine = create_engine('sqlite:///example.db')
@@ -49,6 +52,25 @@ users = session.query(User).all()
 st.header("Users in the database:")
 for user in users:
     st.write(f"ID: {user.id}, Name: {user.name}, Age: {user.age}")
+
+
+st.title("SQLite Database Download Example with SQLAlchemy")
+
+# Provide a download button for the SQLite database
+with open(db_path, 'rb') as f:
+    st.download_button(
+        label="Download SQLite Database",
+        data=f,
+        file_name=os.path.basename(db_path),
+        mime='application/octet-stream'
+    )
+
+
+
+
+
+
+
 
 # Close the session
 session.close()

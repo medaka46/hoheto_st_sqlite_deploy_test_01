@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -54,7 +55,7 @@ for user in users:
     st.write(f"ID: {user.id}, Name: {user.name}, Age: {user.age}")
 
 
-st.title("SQLite Database Download Example with SQLAlchemy")
+st.subheader("SQLite Database Download Example with SQLAlchemy")
 
 # Provide a download button for the SQLite database
 with open(db_path, 'rb') as f:
@@ -64,6 +65,28 @@ with open(db_path, 'rb') as f:
         file_name=os.path.basename(db_path),
         mime='application/octet-stream'
     )
+    
+# Query the database and load data into a DataFrame
+query = "SELECT * FROM users"  # Replace with your actual query
+df = pd.read_sql(query, engine)
+
+# Streamlit app
+st.title("CSV Download Example with Streamlit")
+
+# Display the DataFrame
+st.write("Here is the data from the database:")
+st.dataframe(df)
+
+# Convert DataFrame to CSV
+csv = df.to_csv(index=False)
+
+# Provide a download button for the CSV file
+st.download_button(
+    label="Download CSV",
+    data=csv,
+    file_name='data.csv',
+    mime='text/csv'
+)
 
 
 
